@@ -1,0 +1,39 @@
+{{ if eq .Values.config.mode "ESTIMATOR" }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Release.Name }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}
+    spec:
+      serviceAccountName: {{ .Release.Name }}-sa
+      containers:
+        - name: {{ .Release.Name }}
+          image: 'registry.bjornp.com/public/kubewatt:{{ .Values.tag }}'
+          ports:
+            - containerPort: 9400
+              name: metrics
+          volumeMounts:
+            - mountPath: /app/config.json
+              name: config
+              subPath: config
+          env:
+            - name: KW_CONFIG_PATH
+              value: /app/config.json
+            - name: KW_LOG_LEVEL
+              value: {{ .Values.logLevel }}
+      volumes:
+        - name: config
+          configMap:
+            name: {{ .Release.Name }}-config
+{{ end }}

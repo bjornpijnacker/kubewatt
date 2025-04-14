@@ -1,0 +1,57 @@
+{
+  "mode": "INIT_BOOTSTRAP",
+  "data-storage": {
+    "mode": "EMAIL",
+    "email": {
+      "hostname": "",
+      "port": 465,
+      "use-ssl": true,
+      "username": "",
+      "password": "",
+      "from": "kubewatt@bjornp.com",
+      "recipient": "bjorn@bjornp.com"
+    }
+  },
+  "collector": {
+    "node-names": [
+      "129.125.235.218"
+    ],
+    "node-static-power": {
+      "129.125.235.218": 207.8
+    },
+    "power": {
+      "source": "REDFISH",
+      "redfish": {
+        "129.125.235.218": {
+          "host": "https://129.125.235.217",
+          "systems": [
+            "System.Embedded.1"
+          ],
+          "username": "bjorn",
+          "password": ""
+        }
+      }
+    },
+    "utilization": {
+      "control-plane-pods": [
+        "nfs-.*",
+        "calico-.*",
+        "canal-.*",
+        "coredns-.*",
+        "metrics-.*",
+        "kepler-.*",
+        "tekton-.*",
+        "kubewatt-.*"
+      ]
+    }
+  },
+  "bootstrap-initializer": {
+    "bucket-percent-start": 20,
+    "bucket-percent-end": 80,
+    "bucket-size": 10,
+    "min-mult": 0.5,
+    "node-has-smt": {
+      "129.125.235.218": false
+    }
+  }
+}

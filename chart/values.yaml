@@ -1,0 +1,55 @@
+namespace: kubewatt
+tag: latest
+
+svc:
+  port: 30400
+
+# TODO: provide options to deploy with ingress
+# TODO: provide options to configure persistent storage for FileDataStorageProvider
+
+logLevel: "INFO"
+
+job:
+  completions: 1
+
+config:
+  mode: ESTIMATOR
+  data-storage:
+    mode: NONE
+#    email:
+#      hostname: smtp.gmail.com
+#      port: 465
+#      use-ssl: true
+#      username: bjorn.pijnacker@gmail.com
+#      password:
+#      from: kubewatt@bjornp.com
+#      recipient: bjorn@bjornp.com
+  collector:
+    node-names:
+      - 129.125.235.218
+    node-static-power:
+      '129.125.235.218': 199.1
+    power:
+      source: REDFISH
+      redfish:
+        '129.125.235.218':
+          host: https://129.125.235.217
+          systems:
+            - System.Embedded.1
+          username: bjorn
+    utilization:
+      control-plane-pods:
+        - nfs-.*
+        - calico-.*
+        - canal-.*
+        - coredns-.*
+        - metrics-.*
+        - tekton-.*
+        - kubewatt-.*
+  bootstrap-initializer:
+    bucket-percent-start: 20
+    bucket-percent-end: 80
+    bucket-size: 10
+    min-mult: 0.5
+    node-has-smt:
+      '129.125.235.218': false

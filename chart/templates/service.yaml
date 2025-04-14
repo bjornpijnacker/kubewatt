@@ -1,0 +1,16 @@
+{{ if eq .Values.config.mode "ESTIMATOR" }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-svc
+  namespace: {{ .Values.namespace }}
+spec:
+  type: NodePort
+  selector:
+    app: {{ .Release.Name }}
+  ports:
+    - protocol: TCP
+      port: 9400
+      targetPort: metrics
+      nodePort: {{ .Values.svc.port }}
+{{ end }}

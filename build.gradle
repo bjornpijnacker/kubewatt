@@ -1,0 +1,64 @@
+plugins {
+    id 'java'
+    id 'io.freefair.lombok' version "8.10"
+    id 'com.gradleup.shadow' version '8.3.1'
+}
+
+group = 'com.bjornp'
+version = '0.1'
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'com.bjornp.kubewatt.KubeWatt'
+    }
+}
+
+shadowJar {
+    archiveFileName = "${archiveBaseName.get()}.${archiveExtension.get()}"
+}
+
+// force reproducible builds with equal source code
+// https://gradleup.com/shadow/configuration/reproducible-builds/
+tasks.withType(AbstractArchiveTask).configureEach {
+    preserveFileTimestamps = false
+    reproducibleFileOrder = true
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // logging
+    implementation group: 'org.slf4j', name: 'slf4j-api', version: '2.0.16'
+    implementation group: 'ch.qos.logback', name: 'logback-core', version: '1.5.8'
+    implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.5.8'
+
+    // HTTP and JSON
+    implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.12.0'
+//    implementation 'com.google.code.gson:gson:2.11.0'
+    implementation 'io.kubernetes:client-java:21.0.1'
+
+    implementation group: 'jakarta.validation', name: 'jakarta.validation-api', version: '3.1.0'
+    implementation group: 'org.hibernate.validator', name: 'hibernate-validator', version: '8.0.1.Final'
+    implementation group: 'org.glassfish', name: 'jakarta.el', version: '4.0.2'
+
+    // CSV and dataframes
+    implementation group: 'org.apache.commons', name: 'commons-csv', version: '1.12.0'
+    implementation group: 'org.apache.commons', name: 'commons-math3', version: '3.6.1'
+//    implementation 'tech.tablesaw:tablesaw-core:0.43.1'
+
+    // e-mail (for the EmailDataStorageProvider)
+    implementation group: 'org.apache.commons', name: 'commons-email', version: '1.6.0'
+
+    // prometheus
+    implementation 'io.prometheus:prometheus-metrics-core:1.3.1'
+    implementation 'io.prometheus:prometheus-metrics-exporter-httpserver:1.3.1'
+
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+test {
+    useJUnitPlatform()
+}

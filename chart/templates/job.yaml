@@ -1,0 +1,36 @@
+{{ if ne .Values.config.mode "ESTIMATOR" }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ .Release.Name }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Release.Name }}
+spec:
+  backoffLimit: 0
+  completions: {{ .Values.job.completions }}
+  parallelism: 1
+  template:
+    spec:
+      restartPolicy: Never
+      serviceAccountName: {{ .Release.Name }}-sa
+      containers:
+        - name: {{ .Release.Name }}
+          image: 'registry.bjornp.com/public/kubewatt:{{ .Values.tag }}'
+          ports:
+            - containerPort: 9400
+              name: metrics
+          volumeMounts:
+            - mountPath: /app/config.json
+              name: config
+              subPath: config
+          env:
+            - name: KW_CONFIG_PATH
+              value: /app/config.json
+            - name: KW_LOG_LEVEL
+              value: {{ .Values.logLevel }}
+      volumes:
+        - name: config
+          configMap:
+            name: {{ .Release.Name }}-config
+{{ end }}

@@ -1,0 +1,16 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ .Release.Name }}-cr
+rules:
+  - apiGroups: [ "metrics.k8s.io" ]
+    verbs: [ "list", "get" ]
+    resources: [ "pods", "nodes" ]
+  - apiGroups: [ "" ]
+    verbs: [ "list", "get" ]
+    resources:
+      - "namespaces"
+      - "pods"
+      {{ if eq .Values.config.mode "INIT_BOOTSTRAP" }}
+      - "nodes"
+      {{ end }}
