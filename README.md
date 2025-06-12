@@ -8,7 +8,7 @@ KubeWatt is a metrics collector for Kubernetes that estimates the amount of powe
 KubeWatt collects power usage per node from a power source such as Redfish and collects container and node CPU-usage
 metrics from the Kubernetes metrics API.
 
-For more information on KubeWatt, please refer to the associated research paper. **// TODO: add URL to publication**
+For more information on KubeWatt, please refer to the associated research paper. [Pre-print is available here.](https://arxiv.org/abs/2504.10702)
 
 ## Usage
 
